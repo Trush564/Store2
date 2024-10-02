@@ -3,7 +3,7 @@ public class ClothingItem {
     private String color;
     private String size;
 
-
+    //конструктор
     public ClothingItem(String type, String color, String size) {
         this.type = type;
         this.color = color;
@@ -21,6 +21,7 @@ public class ClothingItem {
     public String getSize() {
         return size;
     }
+    //метод для виведення інфо про товар
     public String toString() {
         return type + " кольору " + color + " розміру " + size;
     }

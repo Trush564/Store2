@@ -1,4 +1,5 @@
 public class ClothingSize {
+    //метод для обчислення розміру
     public static String calculateSize(Size size) {
         double chest = size.getChest();
         double waist = size.getWaist();

@@ -2,6 +2,7 @@ public class Size {
     private double chest;
     private double waist;
     private double hips;
+    //Конструктор
     public Size(double chest, double waist, double hips) {
         this.chest = chest;
         this.waist = waist;
@@ -18,5 +19,10 @@ public class Size {
     public double getHips() {
         return hips;
     }
+    //метод для виведення розмірів
+    public void printSize(){
+        System.out.println("Обхват грудей:"+ chest+ "см, талії:"+ waist+"см, стегон"+hips+"см");
+    }
 }
+
 
