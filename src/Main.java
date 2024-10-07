@@ -12,22 +12,34 @@ public class Main {
         Store store = new Store(scanner);
         //Цикл покупок
         while (shopping) {
-            //Викликаємо метод для вибору товару
-            ClothingItem clothingItem=store.chooseClothingItem();
-            if (clothingItem==null){
-                System.out.println("Будь ласка, спробуйте обрати вибрати інший тип одягу");
-                continue;//Повертаємо до початку циклу
+            System.out.println("1.Купити повсякденний одяг");
+            System.out.println("2. КУпити формальний одяг ");
+            int choice=scanner.nextInt();
+            if (choice == 1) {
+                //Викликаємо метод для вибору товару
+                ClothingItem clothingItem = store.chooseClothingItem();
+                if (clothingItem != null) {
+                    boolean confirmed = store.confirmPurchase(clothingItem);
+                    if (confirmed) {
+                        System.out.println("Ваше замовлення: " + clothingItem);
+                        System.out.println("Гарного дня!");
+                    } else {
+                        System.out.println("Операцію скасовано");
+                    }
+                }
+            }else if (choice==2){
+                FormalClothing formalItem=store.chooseFormal();
+                if(formalItem!=null){
+                    boolean confirmed=store.confirmPurchase(formalItem);
+                    if(confirmed){
+                        System.out.println("Ваше замовлення:"+formalItem);
+                        System.out.println(" Гарного дня!");
+                    }else {
+                        System.out.println("Операцію скасовано");
+                    }
+                }
             }
-            //Підтвердження покупки
-            boolean confirmed =store.confirmPurchase(clothingItem);
 
-            if(confirmed){
-                //Якщо підтверджена
-                System.out.println("Ваше замовлення"+clothingItem);
-                System.out.println(" Гарного дня!");
-            }else{
-                System.out.println("Операція скасована");
-            }
             //Чи хоче кор продовжити покупки
             System.out.println("Бажаєте ще щось купити?");
             System.out.println("1.Так");
