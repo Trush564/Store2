@@ -1,4 +1,4 @@
-public class ClothingItem {
+public class ClothingItem implements Product{
     private String type;
     private String color;
     private String size;
@@ -22,7 +22,19 @@ public class ClothingItem {
         return size;
     }
     //метод для виведення інфо про товар
-    public String toString() {
+    @Override
+    public String getDescription() {
         return type + " кольору " + color + " розміру " + size;
+    }
+
+    @Override
+    public boolean confirmPurchase() {
+        System.out.println("Ви хочете купити: " + getDescription());
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return getDescription();
     }
 }

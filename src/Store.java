@@ -1,13 +1,74 @@
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 public class Store {
     //Змінна класу
     private Scanner scanner;
+    private Recommendation recommendation;
+    private List<Product> cart=new ArrayList<>();
 
     //Конструктор
     public Store(Scanner scanner) {
         this.scanner = scanner;
+        this.recommendation = new Recommendation(scanner);
+    }
+    public void addClothing(boolean isFormal) {
+        Product item = chooseClothingItemRecommendation(isFormal);
+        if (item != null) {
+            cart.add(item);
+            item.confirmPurchase();
+        }
     }
 
+    public void addShoes() {
+        Shoes item = chooseShoes();
+        if (item != null) {
+            cart.add(item);
+            item.confirmPurchase();
+        }
+    }
+
+    public void addAccessory() {
+        Accessory item = chooseAccessory();
+        if (item != null) {
+            cart.add(item);
+            item.confirmPurchase();
+        }
+    }
+
+    public void showCart() {
+        System.out.println("Ваше замовлення:");
+        for (Product item : cart) {
+            System.out.println(item.getDescription());
+        }
+    }
+
+    public void editProduct(Product product) {
+        cart.remove(product);
+        if (product instanceof Shoes) {
+            addShoes();
+        } else if (product instanceof Accessory) {
+            addAccessory();
+        } else if (product instanceof FormalClothing) {
+            addClothing(true);
+        } else {
+            addClothing(false);
+        }
+    }
+    public ClothingItem chooseClothingItemRecommendation(boolean isFormal){
+        boolean wantRecommendation=recommendation.askRecommendation();
+        if (wantRecommendation){
+            System.out.println("Введіть температуру (°C):");
+            int temperature = scanner.nextInt();
+            recommendation.recommendClothing(isFormal, temperature);
+        }
+
+        if(isFormal){
+            return chooseFormal();
+        } else{
+            return chooseClothingItem();
+        }
+    }
     //Метод для вибору товару
     public ClothingItem chooseClothingItem() {
         String clothingType = null;
@@ -245,5 +306,193 @@ public class Store {
             }
         }
     }
-}
 
+    //  метод для перегляду доступних товарів
+    public void displayAvailableProducts() {
+        System.out.println("Доступні товари:");
+        System.out.println("1. Одяг");
+        System.out.println("2. Взуття");
+        System.out.println("3. Аксесуари");
+        System.out.println("4. Вихід");
+    }
+
+    // Метод для отримання товару
+    public void handleProductSelection() {
+        while (true) {
+            displayAvailableProducts();
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    chooseClothingItem();
+                    break;
+                case 2:
+                    addShoes();
+                    break;
+                case 3:
+                    addAccessory();
+                    break;
+                case 4:
+                    System.out.println("Вихід ");
+                    return;
+                default:
+                    System.out.println("Невірний вибір, спробуйте ще раз.");
+            }
+        }
+    }
+    public  List<Product>getCart(){
+        return cart;
+    }
+
+    // Метод для відображення інформації про товар
+    public void displayProductInfo(Product product) {
+        System.out.println("Інформація про товар:");
+        System.out.println(product.toString());
+    }
+    public Shoes chooseShoes() {
+        System.out.println("Оберіть стать:");
+        System.out.println("1. Чоловічий");
+        System.out.println("2. Жіночий");
+        int genderChoice = scanner.nextInt();
+        String gender = (genderChoice == 1) ? "Чоловічий" : "Жіночий";
+
+        System.out.println("Оберіть пору року:");
+        System.out.println("1. Зима");
+        System.out.println("2. Літо");
+        System.out.println("3. Осінь/Весна");
+        int seasonChoice = scanner.nextInt();
+        String season = switch (seasonChoice) {
+            case 1 -> "Зима";
+            case 2 -> "Літо";
+            case 3 -> "Осінь/Весна";
+            default -> "Невідома пора року";
+        };
+
+        String type;
+        if (genderChoice == 1) { // Чоловічий
+            type = chooseMenShoes(season);
+        } else { // Жіночий
+            type = chooseWomenShoes(season);
+        }
+
+        System.out.println("Оберіть колір:");
+        // Введіть логіку для вибору кольору
+        System.out.println("1. Чорний");
+        System.out.println("2. Коричневий");
+        System.out.println("3. Сірий");
+        System.out.println("4. Білий");
+        int colorChoice = scanner.nextInt();
+        String color = getColor(colorChoice);
+
+        System.out.print("Введіть розмір (в см): ");
+        double footSize = scanner.nextDouble();
+
+        return new Shoes(gender, season, type, color, footSize);
+    }
+
+    private String chooseMenShoes(String season) {
+        if (season.equals("Зима")) {
+            System.out.println("Оберіть тип: 1. Чоботи 2. Черевики");
+            int typeChoice = scanner.nextInt();
+            return (typeChoice == 1) ? "Чоботи" : "Черевики";
+        } else if (season.equals("Літо")) {
+            System.out.println("Оберіть тип: 1. Кросівки 2. Сандалі");
+            int typeChoice = scanner.nextInt();
+            return (typeChoice == 1) ? "Кросівки" : "Сандалі";
+        } else {
+            System.out.println("Оберіть тип: 1. Кросівки 2. Черевики");
+            int typeChoice = scanner.nextInt();
+            return (typeChoice == 1) ? "Кросівки" : "Черевики";
+        }
+    }
+
+    private String chooseWomenShoes(String season) {
+        if (season.equals("Зима")) {
+            System.out.println("Оберіть тип: 1. Чоботи 2. Ботильйони");
+            int typeChoice = scanner.nextInt();
+            return (typeChoice == 1) ? "Чоботи" : "Ботильйони";
+        } else if (season.equals("Літо")) {
+            System.out.println("Оберіть тип: 1. Кросівки 2. Босоніжки");
+            int typeChoice = scanner.nextInt();
+            return (typeChoice == 1) ? "Кросівки" : "Босоніжки";
+        } else {
+            System.out.println("Оберіть тип: 1. Кросівки 2. Черевики");
+            int typeChoice = scanner.nextInt();
+            return (typeChoice == 1) ? "Кросівки" : "Черевики";
+        }
+    }
+    public Accessory chooseAccessory() {
+        System.out.println("Оберіть стать:");
+        System.out.println("1. Чоловічий");
+        System.out.println("2. Жіночий");
+        int genderChoice = scanner.nextInt();
+        String gender = (genderChoice == 1) ? "Чоловічий" : "Жіночий";
+
+        String accessoryType = "";
+        if (genderChoice == 1) {
+            System.out.println("Оберіть тип аксесуара:");
+            System.out.println("1. Годинник");
+            System.out.println("2. Ремінь");
+            int typeChoice = scanner.nextInt();
+            accessoryType = (typeChoice == 1) ? "Годинник" : "Ремінь";
+        } else {
+            System.out.println("Оберіть тип аксесуара:");
+            System.out.println("1. Сумка");
+            System.out.println("2. Кулон");
+            int typeChoice = scanner.nextInt();
+            accessoryType = (typeChoice == 1) ? "Сумка" : "Кулон";
+        }
+
+        // Вибір кольору
+        System.out.println("Оберіть колір:");
+        System.out.println("1. Чорний");
+        System.out.println("2. Білий");
+        System.out.println("3. Сірий");
+        System.out.println("4. Коричневий");
+        int colorChoice = scanner.nextInt();
+        String color = getColor(colorChoice);
+
+        // Створення нового аксесуару
+        return new Accessory(gender, color, accessoryType);
+    }
+
+
+    private String getSeason(int choice) {
+        switch (choice) {
+            case 1: return "Зима";
+            case 2: return "Літо";
+            case 3: return "Весна";
+            case 4: return "Осінь"; // Додано для повноти
+            default: return "Невідома пора року";
+        }
+    }
+
+    private String chooseShoeType(String gender, String season) {
+        if (gender.equals("Чоловічий")) {
+            if (season.equals("Зима")) {
+                System.out.println("Оберіть тип: 1. Чоботи, 2. Черевики");
+                int typeChoice = scanner.nextInt();
+                return (typeChoice == 1) ? "Чоботи" : "Черевики";
+            } else if (season.equals("Літо")) {
+                System.out.println("Оберіть тип: 1. Кросівки, 2. Сандалі");
+                int typeChoice = scanner.nextInt();
+                return (typeChoice == 1) ? "Кросівки" : "Сандалі";
+            }
+        } else {
+            if (season.equals("Зима")) {
+                System.out.println("Оберіть тип: 1. Чоботи, 2. Ботильйони");
+                int typeChoice = scanner.nextInt();
+                return (typeChoice == 1) ? "Чоботи" : "Ботильйони";
+            } else if (season.equals("Літо")) {
+                System.out.println("Оберіть тип: 1. Кросівки, 2. Босоніжки");
+                int typeChoice = scanner.nextInt();
+                return (typeChoice == 1) ? "Кросівки" : "Босоніжки";
+            }
+        }
+        return null;
+    }
+
+    private double calculateShoeSize(double footSize) {
+        return Math.round(footSize * 1.5); // Множимо на 1.5
+    }
+
+}
