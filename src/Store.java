@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 public class Store {
     //Змінна класу
     private Scanner scanner;
@@ -12,8 +13,9 @@ public class Store {
         this.scanner = scanner;
         this.recommendation = new Recommendation(scanner);
     }
-    public void addClothing(boolean isFormal) {
-        Product item = chooseClothingItemRecommendation(isFormal);
+
+    public void addClothing() {
+        Product item = chooseClothingItem();
         if (item != null) {
             cart.add(item);
             item.confirmPurchase();
@@ -36,10 +38,13 @@ public class Store {
         }
     }
 
-    public void showCart() {
+    public void showCart() throws  Cart {
         System.out.println("Ваше замовлення:");
         for (Product item : cart) {
             System.out.println(item.getDescription());
+        }
+        if (cart.isEmpty()){
+            throw new Cart ("Кошик порожній");
         }
     }
 
@@ -50,9 +55,9 @@ public class Store {
         } else if (product instanceof Accessory) {
             addAccessory();
         } else if (product instanceof FormalClothing) {
-            addClothing(true);
+            addClothing();
         } else {
-            addClothing(false);
+            addClothing();
         }
     }
     public ClothingItem chooseClothingItemRecommendation(boolean isFormal){

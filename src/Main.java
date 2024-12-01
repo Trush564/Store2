@@ -23,6 +23,7 @@ public class Main {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
+                    store.addClothing();
                     boolean wantRecommendation = false;
                     System.out.println("Хочете отримати рекомендацію?");
                     System.out.println("1. Так");
@@ -52,6 +53,7 @@ public class Main {
                     break;
 
                 case 2:
+                    store.addClothing();
                     FormalClothing formalItem = store.chooseFormal();
                     if (formalItem != null) {
                         boolean confirmed = store.FormalPurchase(formalItem);
@@ -73,15 +75,17 @@ public class Main {
                     break;
 
                 case 5:
-                    store.showCart();
-                    System.out.println("Бажаєте змінити товар? (1. Так, 2. Ні)");
-                    if (scanner.nextInt() == 1) {
-                        System.out.print("Введіть номер товару для зміни: ");
-                        int index = scanner.nextInt();
-                        store.editProduct(store.getCart().get(index - 1));
+                    try {
+                        store.showCart();
+                        System.out.println("Бажаєте змінити товар? (1. Так, 2. Ні)");
+                        if (scanner.nextInt() == 1) {
+                            System.out.print("Введіть номер товару для зміни: ");
+                            int index = scanner.nextInt();
+                            store.editProduct(store.getCart().get(index - 1));
+                    }}catch(Cart e){
+                        System.out.println(e.getMessage());
                     }
                     break;
-
                 case 6:
                     shopping = false;
                     System.out.println("Дякуємо за покупки! Повертайтеся ще!");
